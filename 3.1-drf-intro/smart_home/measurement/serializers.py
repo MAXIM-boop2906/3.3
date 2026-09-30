@@ -1,10 +1,40 @@
 from rest_framework import serializers
+from .models import Sensor, Measurement
 
 
-# TODO: опишите сериализатор датчика (ModelSerializer) для вывода id, name, description.
+class SensorListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Sensor
+        fields = ['id', 'name', 'description']
 
-# TODO: опишите сериализатор измерения (ModelSerializer) для вывода temperature, created_at.
 
-# TODO: опишите детальный сериализатор датчика (ModelSerializer):
-# - поля: id, name, description, measurements;
-# - measurements — вложенный сериализатор MeasurementSerializer(read_only=True, many=True).
+class MeasurementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Measurement
+        fields = ['temperature', 'created_at', 'image']
+
+
+class SensorDetailSerializer(serializers.ModelSerializer):
+    measurements = MeasurementSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = Sensor
+        fields = ['id', 'name', 'description', 'measurements']
+
+
+class SensorCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Sensor
+        fields = ['name', 'description']
+
+
+class SensorUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Sensor
+        fields = ['name', 'description']
+
+
+class MeasurementCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Measurement
+        fields = ['sensor', 'temperature', 'image']
